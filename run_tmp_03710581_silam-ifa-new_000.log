@@ -1,0 +1,306 @@
+Hello world! This is Unknown (could not get last revision). speaking. PID = 3710581
+Running at HostName: silam-ifa-new
+compiler_version: GCC version 13.3.0
+compiler_options: -cpp -I ../obj/gnu/ -I /usr/include -imultiarch x86_64-linux-gnu -D_REENTRANT -D WITH_BZIP2 -D USE_PROJ6 -mtune=generic -march=x86-64 -g -O3 -fopenmp -ffast-math -fbacktrace -ffree-line-length-none -fpre-include=/usr/include/finclude/x86_64-linux-gnu/math-vector-fortran.h
+Log file name (on start): run_tmp_03710581_silam-ifa-new_000.log
+The binary was compiled at silam-ifa-new  on  2025-03-13 17:27:41
+Compile-time CWD: /home/vasily/POLLEN/silam-model-5_9_2/build
+Compile-time WHOAMI: vasily
+command used for diff: true
+Output of svn diff at ../source/../build
+
+
+
+
+Output of svn diff at ../source/
+
+
+
+
+Serial version
+SILAM executable parameters:
+File name: /home/vasily/POLLEN/SILAM-IFA-POLLEN_ERA5/../silam-model-5_9_2/bin/silam_v5_9_2pub.gnu
+File size, kBytes:  364638.8125000
+Last modification: Thu Mar 13 17:27:42 2025
+Last access: Sat Apr  5 13:22:04 2025
+
+Current directory:/home/vasily/POLLEN/SILAM-IFA-POLLEN_ERA5
+
+Local time now:2025-04-05_15:19:36+0300
+UTC time now:2025-04-05 12:19:36.3
+Memory usage, kB        22720
+1 argument - use it as control file name
+Control file name: PollenDebug.ctrl
+
+
+The following control namelist group v5_3 has been read:
+
+CONTROL_V5_3
+
+LIST = GENERAL_PARAMETERS
+case_name = pollen
+direction_in_time = FORWARD
+start_time = 2024 3 1 0 0 0
+computed_period = 22day
+time_step = 15 min
+computation_accuracy = 1
+simulation_type = EULERIAN
+END_LIST = GENERAL_PARAMETERS
+
+LIST = MPI_PARALLEL_PARAMETERS
+x_divisions = 1
+y_divisions = 1
+nthreads = 32
+use_mpiio = YES
+use_mpiio_netcdf = YES
+END_LIST = MPI_PARALLEL_PARAMETERS
+
+LIST = DISPERSION_PARAMETERS
+grid_method = OUTPUT_GRID
+vertical_method = OUTPUT_LEVELS
+END_LIST = DISPERSION_PARAMETERS
+
+LIST = METEO_PARAMETERS
+dynamic_meteo_file = GRIB /mnt/DISK_10Tb/ERA5/%y4%m2%d2/era5-singl-%y4%m2%d2%h2.grib
+dynamic_meteo_file = GRIB /mnt/DISK_10Tb/ERA5/%y4%m2%d2/era5-3d-%y4%m2%d2%h2.grib
+static_meteo_file = GRIB /mnt/DISK_10Tb/ERA5/era5-inv.grib
+static_meteo_file = GRIB /mnt/DISK_10Tb/ERA5/%y4%m2%d2/era5-singl-%y4%m2%d200.grib
+meteo_time_step = 1 hr
+max_hole_in_meteo_data = 3 hr
+if_wait_for_data = NO
+abl_parameterization_method = FULL_PARAM
+number_of_precipitation_fields = 2
+use_lai = STATIC2
+END_LIST = METEO_PARAMETERS
+
+LIST = EMISSION_PARAMETERS
+emission_source = EULERIAN input/pollen/src_pollen_ragweed.ini
+emission_source = EULERIAN input/pollen/src_pollen_birch.ini
+cut_area_source_if_outside_meteo_grid = YES
+if_technical_source_dump = NONE
+END_LIST = EMISSION_PARAMETERS
+
+LIST = TRANSFORMATION_PARAMETERS
+dry_deposition_scheme = KS2011_TF
+surface_resistance_method = STANDARD
+wet_deposition_scheme = NEW2011_SCAVENGING_FAKECLOUD
+use_dynamic_albedo = YES
+if_actual_humidity_for_particle_size = YES
+default_relative_humidity = 0.8
+passive_subst_ref_lifetime = 500 day
+passive_subst_ref_tempr = 288
+passive_subst_dLifeTime_dT = -1 min/K
+mass_low_threshold = STANDARD_ACCURACY
+END_LIST = TRANSFORMATION_PARAMETERS
+
+LIST = INITIAL_AND_BOUNDARY_CONDITIONS
+initialize_quantity = daily_mean_temperature_2m
+initialize_quantity = temperature_2m_acc
+initialize_quantity = heatsum
+initialize_quantity = pollen_rdy_to_fly
+initialize_quantity = pollen_total_m2
+initialize_quantity = pollen_left
+initialize_quantity = mass_in_air
+initialize_quantity = concentration
+initialize_quantity = advection_moment_x
+initialize_quantity = advection_moment_y
+initialize_quantity = advection_moment_z
+initialization_file = NETCDF   /home/vasily/POLLEN/SILAM-IFA-POLLEN_ERA5/out/%y4%m2/pollen_%y4%m2%d2.nc4
+lateral_boundary_type = ZERO
+top_boundary_type = ZERO
+boundary_time_step = 3 hr
+END_LIST = INITIAL_AND_BOUNDARY_CONDITIONS
+
+LIST = OPTICAL_DENSITY_PARAMETERS
+optical_coefficients_depend_on_relative_humidity = YES
+optical_coefficients_depend_on_temperature = YES
+if_split_aerosol_modes = YES
+if_narrow_wave_bands = YES
+END_LIST = OPTICAL_DENSITY_PARAMETERS
+
+LIST = OUTPUT_PARAMETERS
+source_id = NO_SOURCE_SPLIT
+vertical_method = CUSTOM_LAYERS
+level_type = HEIGHT_FROM_SURFACE
+layer_thickness = 25. 50. 100. 200. 400. 750. 1200. 2000. 2000. 2000.
+output_time_step = 6 hr
+output_times = REGULAR
+output_format = NETCDF4
+time_split = DAILY_NEW_FILE
+template = /home/vasily/POLLEN/SILAM-IFA-POLLEN_ERA5/out/%y4%m2/pollen_%y4%m2%d2
+variable_list = ./output_config_pollen.ini
+massmap_precision_factor = 128
+grid_method = CUSTOM_GRID
+grid_type = lon_lat
+grid_title = GEMS output grid
+resol_flag = 128
+ifReduced = 0
+earth_flag = 0
+wind_component = 0
+reduced_nbr_str = 0
+lat_start = 35
+lon_start = 27
+dx = 0.5
+dy = 0.5
+lon_end = 60
+lat_end = 75
+lat_s_pole = -90
+lon_s_pole = 0.
+lat_pole_stretch = 0.
+lon_pole_stretch = 0.
+END_LIST = OUTPUT_PARAMETERS
+
+LIST = STANDARD_SETUP
+advection_method_eulerian = EULERIAN_V5
+mass_distributor = TRIANGLE_SLAB
+diffuse_vert_cm = YES
+grav_separation = NO
+reference_4_low_mass_threshold = CONST
+kz_profile_method = SIMPLE_KZ
+advection_method_lagrangian = LAGRANGIAN_WIND_ENDPOINT_3D
+random_walk_method = FULLY_MIXED
+advection_method_default = EULERIAN
+abl_height_method = COMBINATION
+continuity_equation = anelastic_v2
+wind_diagnostics = opentop
+horizontal_interpolation = LINEAR
+vertical_interpolation = LINEAR
+time_interpolation = LINEAR
+standard_setup_directory = /home/vasily/POLLEN/SILAM-IFA-POLLEN_ERA5/input
+chemical_database_fnm = ^silam_chemicals_95_OC.dat
+standard_cocktail_fnm = ^standard_aerosols_cocktails.ini
+grib_name_table_fnm = ^grib_name_table.silam
+netcdf_name_table_fnm = ^netcdf_name_table.silam
+timezone_list_fnm = ^tzindex.dat
+photolysis_data_file = ^photolysis_finrose.dat
+optical_properties_meta_data_file = ^optical_properties.dat
+allow_zero_forecast_length = NO
+precipitation_low_limit = 0.0 mm/hr
+print_debug_info = DEBUG_INFO_YES
+cloud_report_interval = 1
+disregard_meteo_data_sources = YES
+randomise_reprojection = YES
+END_LIST = STANDARD_SETUP
+END_CONTROL_V5_3
+
+No-MPI run
+Simulation type         2202
+Expanding paths: /home/vasily/POLLEN/SILAM-IFA-POLLEN_ERA5/input/tmp.tmp
+No or strange smoother_factor:
+Setting smoother_factor = 1. (no smoothing)
+ *** WARNING: cloud_metric not found in the namelist, using SIZE
+ Place of warning: set_standard_setup
+Reading chemical database from :>>>/home/vasily/POLLEN/SILAM-IFA-POLLEN_ERA5/input/silam_chemicals_95_OC.dat<<<
+ *** WARNING: Radiological data file does not exist:
+ Place of warning: init_chemical_materials
+allocating string work            1
+Number of chemical materials set:          269
+Default depositions assigned for nuclides:            0
+ *** WARNING: Not a named line:OPTICAL_PROPERTIES
+ Place of warning: fu_read_namelist
+returning REAL work allocated (thread, WA No, size)         0         1  10000000
+returning REAL work allocated (thread, WA No, size)         0         2  10000000
+allocating string work            2
+reading grib_name_table from /home/vasily/POLLEN/SILAM-IFA-POLLEN_ERA5/input/grib_name_table.silam
+grib_nametable_version            1
+Resetting ECCODES definitions_path from '/usr/share/eccodes/definitions' to '/home/vasily/POLLEN/SILAM-IFA-POLLEN_ERA5/input/eccodes/definitions:/usr/share/eccodes/definitions'
+Using SILAM standard Rs for dry depo
+LowMassThresh UseConst
+init_timezones: Using  last sunday of March/October to swith timezone
+Setting source terms
+returning INT work allocated (thread, WA No, size)         0         1  10000000
+returning INT work allocated (thread, WA No, size)         0         2  10000000
+Counting the simple data file "input/pollen/src_pollen_ragweed.ini" nSrcRead so far:            0
+Counting the simple data file "input/pollen/src_pollen_birch.ini" nSrcRead so far:            1
+TZindexMap not needed
+Allocating pollen sources:            2
+Reading the data file:input/pollen/src_pollen_ragweed.ini
+allocating string work            3
+allocating string work            4
+allocating string work            5
+The following species are set for the pollen source:pollen_ragweed_source
+Material: POLLEN_RAGWEED, mode  fixed/moving diam mode (um):  18.00 18.00 18.00 Nominal diam (um):  18.00, solubility:-999999POLLEN_RAGWEED_m18
+
+=========================================================
+Reporting pollen source:pollen_ragweed_source;natural_emission
+Emitted species:
+Material: POLLEN_RAGWEED, mode  fixed/moving diam mode (um):  18.00 18.00 18.00 Nominal diam (um):  18.00, solubility:-999999POLLEN_RAGWEED_m18
+Emitted standard total and uncertainty:   0.1700000E+08   0.2500000E+00
+Flowering thresholds:
+Start heatsum
+Start calendar day
+End calendar day
+temperature
+daily temperature
+Type of the uncertainty shape of fade-IN:-999999, and fade=OUT:-999999
+Calendar day shift and uncertainty of the start:   0.0000000E+00   0.3000000E+02
+Heatsum type: bioday
+lo temp, hi temp:     274.0499878     313.1499939
+opt temp, photoperiod:     304.8500061      14.5000000
+Temperature response function         6052
+Uncertainty of the start:       0.1000000
+Pollen ripening type: calendar day; normal; diurnal
+First diurnal mode time, sigma:    8100.0000000     900.0000000
+Second diurnal mode time, sigma:   17100.0000000    6000.0000000
+First diurnal mode fraction:       0.4000000
+Pollen release parameters:
+Pollen release type: instant
+Emission to whole abl
+End of pollen source report
+=========================================================
+
+Reading the data file:input/pollen/src_pollen_birch.ini
+The following species are set for the pollen source:pollen_birch_source
+Material: POLLEN_BIRCH, mode  fixed/moving diam mode (um):  22.00 22.00 22.00 Nominal diam (um):  22.00, solubility:-999999POLLEN_BIRCH_m22
+
+=========================================================
+Reporting pollen source:pollen_birch_source;natural_emission
+Emitted species:
+Material: POLLEN_BIRCH, mode  fixed/moving diam mode (um):  22.00 22.00 22.00 Nominal diam (um):  22.00, solubility:-999999POLLEN_BIRCH_m22
+Emitted standard total and uncertainty:   0.1000000E+10   0.9999999E-01
+Flowering thresholds:
+Start heatsum
+End heatsum
+Type of the uncertainty shape of fade-IN:230301, and fade=OUT:230301
+Heatsum type: degree day
+Uncertainty of the start:       0.1000000
+Pollen ripening type: heatsum; linear
+Pollen release parameters:
+Pollen release type: exponential
+MaxReleaseRate_FromBuffer       0.0002778
+low_humidity_threshold       0.5000000
+high_humidity_threshold       0.9000000
+precipitation_threshold       0.0001389
+wind_speed_saturation_level       5.0000000
+wind_speed_max_impact       1.5000000
+Emission to layer between       1.0000000      50.0000000
+End of pollen source report
+=========================================================
+
+Source reading is over
+
+All sources used for the run (short report):
+Source:pollen_ragweed_source,natural_emission
+Source:pollen_birch_source,natural_emission
+
+ #####################################################
+ Fresh
+ Error: Strange named interval:22day
+ Place of error: fu_set_named_interval
+ #####################################################
+At the end of the run memory usage (kB)       119772
+======>>>>  Time counter:Overall_run_time
+ 1.0180sec.
+======>>>>  Time counter:Overall_initialisation
+ 0.0000sec.
+======>>>>  Time counter:count_sources
+ 0.0010sec.
+======>>>>  Time counter:read_sources
+ 0.0000sec.
+Local time now: 2025-04-05_15:19:37+0300
+UTC time now: 2025-04-05 12:19:37.3
+ #####################################################
+ Error: HAD Errors, not renaming log file
+ Place of error: silam_main
+ #####################################################
+Keeping log file:

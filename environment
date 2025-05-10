@@ -1,0 +1,23 @@
+#!/bin/sh
+set -x
+set -u
+set -e
+
+export scriptdir=`pwd`
+export OUTPUTDIR=${scriptdir}/out
+export MAILTO=lyulyukin@ifaran.ru
+export METEO_DIR=/mnt/DISK_10Tb/ERA5
+export LOGDIR=${scriptdir}/logs
+export silam_binary=${scriptdir}/../silam-model-5_9_2/bin/silam_v5_9_2pub.gnu
+export BOUNDARY_DIR="/mnt/DISK_10Tb/BoundariesFMI" ## New path for robust hourly download
+
+export webdir=/var/www/html/silam/
+
+export OMP_NUM_THREADS=32
+export ny=1 ## Number of MPI tasks
+export fcdate=`date -u -d "3 hours" +%Y%m%d`
+#export fcdate=`date -u -d "-2 days" +%Y%m%d`
+
+set +u
+set +e
+set +x
