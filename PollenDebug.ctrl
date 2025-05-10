@@ -1,0 +1,167 @@
+CONTROL_v5_3
+
+LIST = GENERAL_PARAMETERS
+  case_name = pollen
+  direction_in_time = FORWARD
+  start_time = 2024 4 1 0 0 0
+  computed_period = 200 day
+  time_step = 15 min
+  computation_accuracy = 1
+  simulation_type = EULERIAN
+END_LIST = GENERAL_PARAMETERS
+
+LIST = mpi_parallel_parameters
+   x_divisions = 1
+   y_divisions = ${ny}
+   nthreads = ${OMP_NUM_THREADS}
+   use_mpiio = YES
+   use_mpiio_netcdf = YES
+##   max_wind_speed = 100 # [m/s]
+END_LIST = mpi_parallel_parameters
+
+LIST = DISPERSION_PARAMETERS
+  grid_method = OUTPUT_GRID
+  vertical_method = OUTPUT_LEVELS    # METEO_LEVELS / OUTPUT_LEVELS / CUSTOM_LEVELS
+END_LIST = DISPERSION_PARAMETERS
+
+LIST = METEO_PARAMETERS
+  dynamic_meteo_file = GRIB ${METEO_DIR}/%y4%m2%d2/era5-singl-%y4%m2%d2%h2.grib  
+  dynamic_meteo_file = GRIB ${METEO_DIR}/%y4%m2%d2/era5-3d-%y4%m2%d2%h2.grib
+  static_meteo_file = GRIB ${METEO_DIR}/era5-inv.grib
+  static_meteo_file = GRIB ${METEO_DIR}/%y4%m2%d2/era5-singl-%y4%m2%d200.grib  
+  
+  meteo_time_step = 1 hr 
+  max_hole_in_meteo_data = 3 hr
+  if_wait_for_data = NO
+  abl_parameterization_method = FULL_PARAM    # DRY_ABL, FULL_PARAM 
+  number_of_precipitation_fields = 2  
+  use_lai = STATIC2
+  #precipitation_low_limit           = 0.1 mm/hr
+
+END_LIST = meteo_parameters
+
+LIST = emission_parameters
+   emission_source = EULERIAN input/pollen/src_pollen_ragweed.ini
+   emission_source = EULERIAN input/pollen/src_pollen_birch.ini
+   cut_area_source_if_outside_meteo_grid = YES
+   if_technical_source_dump = NONE   # NONE / ORIGINAL_GRID / DISPERSION_GRID
+END_LIST = emission_parameters
+
+LIST = transformation_parameters
+   dry_deposition_scheme = KS2011_TF
+   surface_resistance_method = STANDARD #WES2013 
+   wet_deposition_scheme = NEW2011_SCAVENGING_FAKECLOUD
+   use_dynamic_albedo = YES
+    
+   if_actual_humidity_for_particle_size = YES
+   default_relative_humidity = 0.8
+   passive_subst_ref_lifetime = 500 day
+   passive_subst_ref_tempr = 288
+   passive_subst_dLifeTime_dT = -1 min/K
+   mass_low_threshold = STANDARD_ACCURACY  # CRUDE_ACCURACY, STANDARD_ACCURACY, HIGH_ACCURACY
+
+END_LIST = transformation_parameters
+   
+LIST = initial_and_boundary_conditions
+
+   initialize_quantity = daily_mean_temperature_2m
+   initialize_quantity = temperature_2m_acc
+   initialize_quantity = heatsum
+   initialize_quantity = pollen_rdy_to_fly
+   initialize_quantity = pollen_total_m2
+   initialize_quantity = pollen_left
+   initialize_quantity = mass_in_air  #concentration
+   initialize_quantity = concentration
+   initialize_quantity = advection_moment_x
+   initialize_quantity = advection_moment_y
+   initialize_quantity = advection_moment_z
+
+# From yesterdays run
+   initialization_file = NETCDF   ${OUTPUTDIR}/%y4%m2/pollen_%y4%m2%d2.nc4
+
+   lateral_boundary_type =  ZERO         ! YES/NO
+   top_boundary_type     =  ZERO         ! YES/NO
+   boundary_time_step  =  3 hr        ! timestep unit
+END_LIST = initial_and_boundary_conditions
+
+LIST = optical_density_parameters ############
+   optical_coefficients_depend_on_relative_humidity = YES
+   optical_coefficients_depend_on_temperature = YES
+   if_split_aerosol_modes = YES            ! doesn't work yet
+   if_narrow_wave_bands = YES              ! doesn't work yet
+END_LIST = optical_density_parameters
+
+LIST = output_parameters
+   source_id = NO_SOURCE_SPLIT  # SOURCE_NAME  SOURCE_SECTOR  SOURCE_NAME_AND_SECTOR 
+   vertical_method = CUSTOM_LAYERS #METEO_LEVELS #CUSTOM_LAYERS
+   level_type = HEIGHT_FROM_SURFACE 
+   layer_thickness = 25. 50. 100. 200. 400. 750. 1200. 2000. 2000. 2000.   # output levels [m]/[pa]/[hybrid_nbr], reals
+   output_time_step = 6 hr 
+   output_times = REGULAR 
+   output_format = NETCDF4
+   time_split = DAILY_NEW_FILE 
+   template =  ${OUTPUTDIR}/%y4%m2/pollen_%y4%m2%d2
+   variable_list = ./output_config_pollen.ini
+   massmap_precision_factor = 128 #1/factor =  max relative error
+   #dump_time_step = 24 hr
+
+   grid_method = CUSTOM_GRID     # METEO_GRID / EMISSION_GRID / OUTPUT_GRID / CUSTOM_GRID
+   grid_type = lon_lat
+   grid_title = GEMS output grid
+   resol_flag = 128
+   ifReduced = 0 
+   earth_flag = 0
+   wind_component = 0 
+   reduced_nbr_str = 0 
+
+   lat_start = 35 #Eropian territory of Russia
+   lon_start = 27
+   dx = 0.5
+   dy = 0.5
+   lon_end = 60
+   lat_end = 75
+   
+   lat_s_pole = -90
+   lon_s_pole = 0.
+   lat_pole_stretch = 0.
+   lon_pole_stretch = 0.
+ END_LIST = output_parameters
+
+ LIST = STANDARD_SETUP
+  advection_method_eulerian = EULERIAN_V5
+  mass_distributor = TRIANGLE_SLAB
+  diffuse_vert_cm = YES
+  grav_separation = NO
+  reference_4_low_mass_threshold = CONST #EMISSION or DEFAULT
+
+  kz_profile_method = SIMPLE_KZ #SILAM_ABL_EC_FT_KZ   # ZERO_KZ / SILAM_KZ_EMULATOR / SILAM_OLD_KZ / KZ
+  advection_method_lagrangian = LAGRANGIAN_WIND_ENDPOINT_3D   # LAGRANGIAN_WIND_MID(END)POINT_3D(2D)
+  random_walk_method = FULLY_MIXED    # Random-walk method [IDIOT_SIMPLE, FULLY_MIXED, BULK_GAUSSIAN]
+  advection_method_default = EULERIAN
+  abl_height_method = COMBINATION     # [HIRLAM_ABL, CONSTANT, COMBINATION, RICHARDSON, PARCEL, TURBULENT_ENERGY]
+  continuity_equation = anelastic_v2  # incompressible / incompressible_v2 /  / nwp_omega / zero_wind / hybrid_top_down
+  wind_diagnostics = opentop          # opentop / hardtop / hardtop_weighted / none
+  horizontal_interpolation = LINEAR   # [NEAREST_POINT, SECOND_ORDER, CUBIC, LOG_LINEAR]
+  vertical_interpolation = LINEAR     # [NEAREST_POINT, SECOND_ORDER, CUBIC, LOG_LINEAR]
+  time_interpolation = LINEAR         # [NEAREST_POINT, SECOND_ORDER, CUBIC, LOG_LINEAR]
+
+  standard_setup_directory = ${scriptdir}/input
+  chemical_database_fnm = ^silam_chemicals_95_OC.dat
+  standard_cocktail_fnm = ^standard_aerosols_cocktails.ini
+  
+  grib_name_table_fnm =   ^grib_name_table.silam
+  netcdf_name_table_fnm = ^netcdf_name_table.silam
+  timezone_list_fnm =     ^tzindex.dat
+  photolysis_data_file =  ^photolysis_finrose.dat
+  optical_properties_meta_data_file = ^optical_properties.dat
+  allow_zero_forecast_length = NO      # Whether zero-long forecasts may be used in the simulations
+                                       # Beware of zero-valued accumulated fields
+  precipitation_low_limit = 0.0 mm/hr  # Cut-off limit for precipitation rate (separate for large-sc and conv)
+  print_debug_info = DEBUG_INFO_YES    # DEBUG_INFO_YES, DEBUG_INFO_NO
+  cloud_report_interval = 1
+  disregard_meteo_data_sources = YES
+  randomise_reprojection = YES
+END_LIST = STANDARD_SETUP
+
+END_CONTROL_V5_3
+
